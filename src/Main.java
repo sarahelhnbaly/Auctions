@@ -1,28 +1,37 @@
+import java.util.Scanner;
 import models.Game;
 import models.User;
 import services.AuctionService;
-import models.Auction;
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
 public class Main {
     public static void main(String[] args) {
-        User user1 = new User("JohnDoe", "john@example.com", "password123", 100.0);
-        User user2 = new User("JaneDoe", "jane@example.com", "password456", 150.0);
+        Scanner scanner = new Scanner(System.in);
 
+        // Get user input for name
+        System.out.print("Enter your name: ");
+        String userName = scanner.nextLine();
+
+        // Get user input for email
+        System.out.print("Enter your email: ");
+        String userEmail = scanner.nextLine();
+
+        // Get user input for bid amount
+        System.out.print("Enter bid amount: ");
+        double bidAmount = Double.parseDouble(scanner.nextLine());
+
+        // Creating Game, User, and AuctionService instances based on user input
         Game game = new Game("Awesome Game", "An awesome game description", 50.0);
-
+        User user = new User(userName, userEmail, "password123", 100.0);
         AuctionService auctionService = new AuctionService();
-        auctionService.createAuction(game, user1, 60000); // 1 minute auction
 
-        Auction auction = auctionService.getAuctions().get(0);
+        auctionService.createAuction(game, user, 60000); // 1 minute auction
 
-        if (user2.placeBid(auction, 55.0)) {
-            System.out.println("Bid placed successfully by " + user2.getUsername());
-        } else {
-            System.out.println("Bid failed due to insufficient balance");
-        }
+        // Placing bid
+        auctionService.placeBid(auctionService.getAuctions().get(0), user, bidAmount);
 
-        System.out.println("Highest bid: " + auction.getHighestBid());
+        System.out.println("Bid placed successfully by " + user.getUsername());
+        System.out.println("Highest bid: " + auctionService.getAuctions().get(0).getHighestBid());
+
+        scanner.close();
     }
-
 }
